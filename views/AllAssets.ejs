@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Assets</title>
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"  crossorigin="anonymous" ></script>
+    
+   
+    <link rel="stylesheet" href="../App.css" >
+</head>
+<body>
+    <div class="container">
+        <% if(user.role == "admin") { %>
+            <%- include('AdminNavbar',{user}); %>
+            
+            <% } else { %>
+                <%- include('Navbar',{user}); %>
+<% } %>
+
+<%   if(typeof message != "undefined" && message) { %>
+    <% if(status == 200) { %>
+
+    <div class="mt-5 mb-3">
+
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+        <strong><%=  message  %> </strong>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+      </div>
+
+    </div> 
+    <% } else { %>
+        <div class="mt-5 mb-3">
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  
+              <strong><%=  message  %> </strong>
+  
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  
+            </div>
+  
+          </div> 
+
+        <% }%>
+
+  <% }    %>
+
+
+        <div class="charts" >
+                <canvas id="pieAssets" style="width:100%;max-width: 600px;height: 180px;"></canvas>
+                <canvas id="AssetUsage" style="width:100%;max-width: 600px;height: 180px;"></canvas>
+
+        </div>
+        <div class="card" style="margin-top: 100px;">
+            <div class="card-header" style="display:flex ; justify-content: space-between;">
+                <h1>All Assets <%= Assets.length %></h1>
+                <% if(user.role == "admin") { %>
+                    <h5 class="mt-2">Total Value <%= totalValue %></h5>
+                <div class="buttons d-flex mt-2">
+                    <form action="/asset/createAsset" class="mr-2" method="get">
+
+                        <button class="btn btn-secondary mr-2">+ Add</button>
+                       </form>
+                   <!-- <a href="/asset/create" class="btn btn-secondary mr-2"> + Add</a> -->
+                   <form action="/asset/generateReport" method="get">
+
+                    <button class="btn btn-success">generate report</button>
+                   </form>
+                </div>
+                <% } %>
+                <form action="/asset/searchAsset" method="post" class="d-flex mt-2" style="height:40px ;">
+                    <!-- style="display:flex ; justify-content: space-between;" -->
+                    <div class="input-group">
+                        <input class="form-control" name="name" type="text" placeholder="Search...">
+            
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+        
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>sNo</th>
+                        <th>name</th>
+                        <th>quantity</th>
+                        <th>cost</th>
+                        <th>datePurchased</th>
+                        <th>Category</th>
+                        
+                        <th>status</th>
+                        <th>issueFrequency</th>
+
+
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <% for(let i=0; i<Assets.length; i++){ %>
+                    <tr>
+                        <td><%= Assets[i].id %>  %></td>
+
+                        <td><%= Assets[i].name %></td>
+                        <td><%= Assets[i].quantity %></td>
+                        <td><%= Assets[i].cost %></td>
+                        <td><%= Assets[i].datePurchased %></td>
+                        <% for(let j=0; j<categories.length; j++){ %>
+                        <% if(categories[j].id == Assets[i].categoryId){ %>
+                            <td><%= categories[j].name %></td>
+                        <% } %>
+                        <% } %>
+                        <td><%= Assets[i].status %></td>
+                        <td><%= Assets[i].issueFrequency %></td>
+                        <td class="d-flex">
+                            <form action="/assetRequest" method="post">
+                                <input type="hidden" name="id" id="id" value="<%= Assets[i].id %>">
+                                <input type="hidden" name="status" value="approved">
+                                <button class="btn btn-success" type="submit">request</a>
+                            </form>
+                            <% if(user.role == "admin") { %>
+                                
+                            <form action="/asset/updateAssetForm" method="post">
+                                <input type="hidden" name="id" value="<%= Assets[i].id %>">
+
+                                <button class="btn btn-primary" type="submit">Update</a>
+                            </form>
+                            <form action="/asset/deleteAsset" method="post">
+                                <input type="hidden" name="id" value="<%= Assets[i].id %>">
+                                <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></a>
+                            </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        var xValues1 = [];
+     
+
+        var Data = JSON.parse(`<%- JSON.stringify(Assets) %>`);
+
+
+        var yValues1 = [];
+        var yValues2 = [];
+
+
+        let barColors =[];
+for(var i = 0; i < Data.length; i++){
+   xValues1.push(Data[i].name);
+    yValues2.push(Number(Data[i].quantity));
+    yValues1.push(Number(Data[i].issueFrequency));
+
+    let randomColor = '#000000'.replace(/0/g, function () {
+          return (~~(Math.random() * 16)).toString(16);
+        });
+    
+    barColors.push(randomColor)
+    
+    
+}
+             
+    const config = {
+                    type: "pie",
+          data: {
+            labels: xValues1,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues2
+            }]
+          },
+          options: {
+            title: {
+              display: true,
+              text: "All Assets Pie Chart"
+            }
+        }
+        }; 
+        const config1 = {
+                    type: "pie",
+          data: {
+            labels: xValues1,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues1
+            }]
+          },
+          options: {
+            title: {
+              display: true,
+              text: " Assets Usage Pie Chart"
+            }
+        }
+        }; 
+     new Chart("pieAssets", config)
+     new Chart("AssetUsage", config1)
+
+        
+            </script>
+</body>
+</html>

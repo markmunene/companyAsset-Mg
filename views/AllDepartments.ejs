@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Requests</title>
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../App.css" >
+</head>
+<body>
+    <div class="container">
+        <%- include('AdminNavbar',{user}); %>
+        <%   if(typeof message != "undefined" && message) { %>
+            <% if(status == 200) { %>
+    
+            <div class="mt-5 mb-3">
+    
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+    
+                <strong><%=  message  %> </strong>
+    
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    
+              </div>
+    
+            </div> 
+            <% } else { %>
+                <div class="mt-5 mb-3">
+    
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          
+                      <strong><%=  message  %> </strong>
+          
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          
+                    </div>
+          
+                  </div> 
+    
+                <% }%>
+    
+          <% }    %>
+
+        <div class="card">
+            <div class="card-header" style="display:flex ; justify-content: space-between;">
+                <h1>All Departments</h1>
+                <div class="buttons d-flex mt-2">
+                    <form action="/department" class="mr-2" method="get">
+
+                        <button class="btn btn-secondary mr-2">+ Add</button>
+                       </form>
+                  
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                  
+                    <tr>
+                        <th>sNo</th>
+                        <th>name</th>
+                        <th>description</th>
+                      
+                        <th>Actions</th>
+                    </tr>
+                   
+                </thead>
+                <tbody>
+                   <% for(let i=0; i<Departments.length; i++){ %>
+                    <tr>
+                        <td><%= Departments[i].id %> </td>
+                 
+                        <td><%= Departments[i].name %></td>
+                        <td><%= Departments[i].description %></td>
+                        <td class="d-flex">
+                            <form action="/department/updateDepartmentform" method="post">
+                                <input type="hidden" name="id" value="<%= Departments[i].id %>">
+                              
+                                <button class="btn btn-success" type="submit">Update</a>
+                            </form>
+                        
+                            <form action="/department/deleteDepartments" method="post">
+                                <input type="hidden" name="id" value="<%= Departments[i].id %>">
+                                <button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i></a>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+</body>
+</html>

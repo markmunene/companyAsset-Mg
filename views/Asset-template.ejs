@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        </style>
+    </head>
+    <body>
+        <div style="width: 85%; margin: 0 7.5%;">
+            <div class="" style="display: flex;justify-content: space-between;margin: 20px;">
+                <h2>CompanyAssetMg</h2>
+                <h2><%= dateNow %></h2>
+            </div>
+            <div style="text-align: center; padding-left: 50px;">            
+                <h3>Assets Report</h5>
+                <h3>Total Assets <%= Assets.length %> </h5>
+                <h3> Assets Total Value <%= totalValue %> </h5>
+
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>sNo</th>
+                            <th>name</th>
+                            <th>quantity</th>
+                            <th>cost</th>
+                            <th>datePurchased</th>
+                            <th>status</th>
+                          
+                            <th>issueFrequency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                <% if (Assets.length > 0) { %>
+                    <% Assets.forEach(Asset => {%>
+                       <tr>
+                        <td><%= Asset.id %></td>
+
+                        <td><%= Asset.name %></td>
+
+                        <td><%= Asset.quantity %></td>
+                        <td><%= Asset.cost %></td>
+                        <td><%= Asset.datePurchased %></td>
+
+                        <td><%=Asset.status %></td>
+                        <td><%=Asset.issueFrequency %></td>
+
+                    </tr>
+                    <%  });%>
+                <% }%>
+                    </tbody>
+                </table>
+             </div>
+        </div>
+    </body>
+</html>

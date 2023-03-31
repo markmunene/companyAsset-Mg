@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        </style>
+    </head>
+    <body>
+        <div style="width: 85%; margin: 0 7.5%;">
+            <div class="" style="display: flex;justify-content: space-between;margin: 20px;">
+                <h2>CompanyAssetMg</h2>
+                <h2><%= dateNow %></h2>
+            </div>
+            <div style="text-align: center; padding-left: 50px;">            
+                <h3>Asset Transfer Report</h5>
+                <h3>Total Assets <%= Transfers.length %> </h5>
+                
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>sNo</th>
+                        <th>name</th>
+                        <th>quantity</th>
+                        <th>location</th>
+                        <th>tranferBy</th>
+                        <th>transferTo</th>
+                        <th>status</th>
+                        <th>dateIssued</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i=0; i<Transfers.length; i++){ %>
+                         <tr>
+                             <td><%= Transfers[i].id   %></td>
+                             <% for(let j=0; j<Assets.length; j++){ %>
+                                 <% if(Assets[j].id == Transfers[i].assetId){ %>
+                                     <td><%= Assets[j].name %></td>
+                                 <% } %>
+                                 <% } %>
+                             
+                             <td><%= Transfers[i].quantity %></td>
+                             <td><%= Transfers[i].location %></td>
+     
+                             <% for(let j=0; j<Users.length; j++){ %>
+                                 <% if(Users[j].id == Transfers[i].tranferBy){ %>
+                                     <td><%= Users[j].firstname   %> <%= Users[j].secondname   %></td>
+                                 <% } %>
+                                 <% } %> 
+     
+                                  <% for(let j=0; j<Users.length; j++){ %>
+                                     <% if(Users[j].id == Transfers[i].transferTo){ %>
+                                         <td><%= Users[j].firstname   %> <%= Users[j].secondname   %></td>
+                                     <% } %>
+                                     <% } %>
+                             
+                           
+                             <td><%= Transfers[i].status %></td>
+                             <td><%= Transfers[i].dateIssued %></td>
+                            
+                         </tr>
+                         <% } %>
+                     </tbody>
+                </table>
+             </div>
+        </div>
+    </body>
+</html>
